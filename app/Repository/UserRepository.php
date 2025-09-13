@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Enum\UserRole;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 class UserRepository
 {
@@ -14,5 +16,26 @@ class UserRepository
 
     public function connected(): User{
         return auth('api')->user();
+    }
+
+    public function sendResetLink($email)
+    {
+        $status = Password::broker('users')->sendResetLink(['email' => $email]);
+
+        return  $status === Password::RESET_LINK_SENT;
+    }
+
+    public function resetPassword($data)
+    {
+        $status = Password::broker('users')->reset(
+                    $data,
+                    function (User $user, $password) {
+                        $user->forceFill([
+                            'password' => Hash::make($password),
+                        ])->save();
+                    }
+                );  
+
+        return $status === Password::PASSWORD_RESET;
     }
 }
