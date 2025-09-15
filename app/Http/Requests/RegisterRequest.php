@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegisterRequest extends FormRequest
 {
@@ -21,10 +22,25 @@ class RegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name'          => ['required', 'min:5'],
-            'email'         => ['required', 'email', 'unique:users,email'],
-            'password'      => ['required', 'min:8', 'confirmed']
+            'photo'         => ['nullable', 'image', 'max:5120']
         ];
+
+        if ($this->isMethod('post')) {
+            $rules['email'] = ['required', 'email', 'unique:users,email'];
+            $rules['password'] = ['required', 'confirmed', 'min:8'];
+        }
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $userId = auth('api')->user()->id;
+
+            $rules['email'] = [
+                'sometimes',
+                'email',
+                Rule::unique('users', 'email')->ignore($userId),
+            ];
+        }
+        return $rules;
     }
 }

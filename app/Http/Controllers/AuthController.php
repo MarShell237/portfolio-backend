@@ -23,6 +23,8 @@ class AuthController extends Controller
 {
     public function __construct(private UserRepository $userRepository) {}
 
+    private static string $folderPath = 'users/photos';
+
     public function register(RegisterRequest $request){
         $data = $request->validated();
         $user = User::create([
@@ -32,6 +34,11 @@ class AuthController extends Controller
         ]);
 
         $user->assignRole(Role::firstWhere('name', UserRole::VISITOR->value));
+
+        if (isset($data['photo'])) {
+            $user->setFile($data['photo'], self::$folderPath);
+        }
+
         $user->refresh();
         $token = $this->userRepository->generateToken($user, UserRole::VISITOR);
         event(new Registered($user));
@@ -78,7 +85,7 @@ class AuthController extends Controller
         return ApiResponse::ok('user disconnected');
     }
 
-    
+
     public function verify(EmailVerificationRequest $request)
     {
         if ($this->userRepository->connected()->hasVerifiedEmail()) {

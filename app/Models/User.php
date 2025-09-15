@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Notifications\UserCustomResetPasswordNotification;
 use App\Notifications\UserVerifyEmail;
+use App\Trait\HasFile;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,12 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes;
+    use HasFactory,
+        Notifiable,
+        HasApiTokens,
+        HasRoles,
+        SoftDeletes,
+        HasFile;
 
     /**
      * The attributes that are mass assignable.
@@ -52,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         ];
     }
 
-    
+
     public function sendEmailVerificationNotification()
     {
         $this->notify(new UserVerifyEmail());
