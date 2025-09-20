@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Notifications\UserCustomResetPasswordNotification;
 use App\Notifications\UserVerifyEmail;
-use App\Trait\HasFile;
+use App\Traits\HasFile;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -57,7 +57,6 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
             'password' => 'hashed',
         ];
     }
-
 
     public function sendEmailVerificationNotification()
     {

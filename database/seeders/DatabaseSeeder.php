@@ -14,6 +14,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
+            CategorySeeder::class,
+            TagSeeder::class,
+            PostSeeder::class,
+            ProjectSeeder::class,
+            CommentSeeder::class,
+            ShareSeeder::class,
+            LikeSeeder::class,
         ]);
     }
 }
