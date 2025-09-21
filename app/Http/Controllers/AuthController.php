@@ -10,7 +10,7 @@ use App\Http\Requests\UserResetPasswordRequest;
 use App\Http\Requests\UserSendResetLinkEmailRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Repository\UserRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;

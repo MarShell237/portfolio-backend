@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('color');
-            $table->enum('type', ['project', 'post']);
             $table->string('description');
             $table->timestamps();
         });

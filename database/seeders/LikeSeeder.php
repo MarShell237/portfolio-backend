@@ -3,11 +3,9 @@
 namespace Database\Seeders;
 
 use App\Enum\UserRole;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Post;
 use App\Models\Project;
-use App\Models\Visitor;
 use App\Models\Like;
 use App\Models\User;
 

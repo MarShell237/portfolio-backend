@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enum\UserRole;
+use App\Models\File;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -22,10 +23,12 @@ class UserSeeder extends Seeder
         ]);
 
         $user->assignRole(Role::firstWhere('name', UserRole::ADMIN->value));
+        $user->file()->create(File::factory()->make()->toArray());
 
         $users = User::factory(5)->create();
         $users->each(function (User $user) {
             $user->assignRole(Role::firstWhere('name', UserRole::VISITOR->value));
+            $user->file()->create(File::factory()->make()->toArray());
         });
     }
 }

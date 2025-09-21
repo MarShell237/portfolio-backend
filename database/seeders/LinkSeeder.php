@@ -3,21 +3,21 @@
 namespace Database\Seeders;
 
 use App\Models\File;
-use App\Models\Tag;
+use App\Models\Link;
 use Illuminate\Database\Seeder;
 
-class TagSeeder extends Seeder
+class LinkSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Tag::factory()
-            ->count(25)
+        Link::factory()
+            ->count(3)
             ->create()
-            ->each(function ($tag) {
-                $tag->file()->create(File::factory()->make()->toArray());
+            ->each(function ($link) {
+                $link->file()->create(File::factory()->make()->toArray());
             });
     }
 }

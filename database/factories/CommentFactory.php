@@ -25,8 +25,8 @@ class CommentFactory extends Factory
         return [
             'content' => $this->faker->sentence(),
             'commenter_id' => $visitor->id,
-            'commentable_id' => Project::factory(),
-            'commentable_type' => Project::class,
+            // 'commentable_id' => Project::factory(),
+            // 'commentable_type' => Project::class,
         ];
     }
 }

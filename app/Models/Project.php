@@ -3,15 +3,19 @@
 namespace App\Models;
 
 use App\Traits\HasFile;
+use App\Traits\HasLinks;
+use App\Traits\HasTags;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-    use HasFactory, 
+    use HasFactory,
         SoftDeletes,
-        HasFile;
+        HasFile,
+        HasLinks,
+        HasTags;
 
     protected $fillable = [
         'title',

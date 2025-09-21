@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\File;
 use App\Models\Post;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Tag;
 use Illuminate\Database\Seeder;
 
 class PostSeeder extends Seeder
@@ -13,6 +14,12 @@ class PostSeeder extends Seeder
      */
     public function run(): void
     {
-        Post::factory()->count(50)->create();
+        Post::factory()
+            ->count(35)
+            ->create()
+            ->each(function ($post) {
+                $post->file()->create(File::factory()->make()->toArray());
+                $post->tags()->attach(Tag::factory()->count(3)->create());
+            });
     }
 }

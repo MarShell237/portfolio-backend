@@ -14,6 +14,18 @@ trait HasFile
         return $this->morphOne(File::class, 'fileable');
     }
 
+    /**
+     * Get the ID of the associated file, if it exists.
+     *
+     * @return int|null
+     */
+    public function getFileId(): ?int
+    {
+        return File::where('fileable_id', $this->id)
+            ->where('fileable_type', get_class($this))
+            ->value('id');
+    }
+
     public function setFile(
         UploadedFile $uploadedFile,
         string $path,
