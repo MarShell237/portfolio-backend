@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Enum\UserRole;
 use App\Notifications\UserCustomResetPasswordNotification;
 use App\Notifications\UserVerifyEmail;
 use App\Traits\HasFile;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +17,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
+class User extends Authenticatable implements MustVerifyEmail, CanResetPassword, FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory,
@@ -56,6 +59,15 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->hasRole(UserRole::ADMIN->value);
+    }
+
+    public function getFilamentAvatarUrl(): ?string{
+        return $this->getFileUrl();
     }
 
     public function sendEmailVerificationNotification()

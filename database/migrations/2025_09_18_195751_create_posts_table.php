@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('reading_time');
             $table->unsignedBigInteger('view_count');
             $table->boolean('pinned')->default(false);
-            $table->timestamp('published_at');
+            $table->timestamp('published_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

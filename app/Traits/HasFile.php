@@ -26,6 +26,10 @@ trait HasFile
             ->value('id');
     }
 
+    public function getFileUrl(): string{
+        return $this->file ? Storage::disk($this->file->disk)->url($this->file->file_path) : null;
+    }
+
     public function setFile(
         UploadedFile $uploadedFile,
         string $path,

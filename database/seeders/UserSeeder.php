@@ -6,6 +6,7 @@ use App\Enum\UserRole;
 use App\Models\File;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
@@ -16,14 +17,25 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::factory()->create([
+        $me = User::factory()->create([
             'name' => 'Marcel J. DJIOFACK',
             'email' => 'marcelj.djiofack@outlook.com',
-            'password' => Hash::make('filamentpassword')
+            'password' => Hash::make('marcelj.djiofack@outlook.com')
         ]);
 
-        $user->assignRole(Role::firstWhere('name', UserRole::ADMIN->value));
-        $user->file()->create(File::factory()->make()->toArray());
+        $me->assignRole(Role::firstWhere('name', UserRole::ADMIN->value));
+        $path = public_path('assets/images/profil.jpg');
+        if (file_exists($path)) {
+            $uploadedFile = new UploadedFile(
+                $path,
+                basename($path),                        // nom original
+                mime_content_type($path),              // type mime
+                null,                                  // size (null = auto)
+                true                                   // test mode
+            );
+
+            $me->setFile($uploadedFile, 'photo');
+        }
 
         $users = User::factory(5)->create();
         $users->each(function (User $user) {

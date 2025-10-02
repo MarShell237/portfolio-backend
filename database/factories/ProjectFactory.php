@@ -25,6 +25,7 @@ class ProjectFactory extends Factory
             'view_count' => fake()->numberBetween(0, 1000),
             'estimated_cost' => fake()->randomFloat(2, 1000, 10000),
             'pinned' => fake()->boolean(),
+            'published_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }
