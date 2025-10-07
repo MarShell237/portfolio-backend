@@ -23,7 +23,7 @@ class ProjectFactory extends Factory
             'excerpt' => fake()->paragraph(),
             'content' => fake()->paragraphs(5, true),
             'view_count' => fake()->numberBetween(0, 1000),
-            'estimated_cost' => fake()->randomFloat(2, 1000, 10000),
+            'estimated_cost' => fake()->numberBetween(1000, 10000),
             'pinned' => fake()->boolean(),
             'published_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
