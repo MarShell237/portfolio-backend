@@ -50,17 +50,11 @@ class ProjectForm
                 Toggle::make('pinned')
                     ->label('Épinglé')
                     ->required(),
-                Slider::make('estimated_cost')
-                        ->label('coût estimé')
-                        ->range(50000, 1000000)
-                        ->step(50000)
-                        ->tooltips()
-                        ->fillTrack()
-                        // ->pips(PipsMode::Steps)
-                        ->columnSpanFull()
-                        ->formatStateUsing(fn ($state) => (int) $state)
-                        ->dehydrateStateUsing(fn ($state) => (int) $state)
-                        ->required(),
+                TextInput::make('estimated_cost')
+                    ->numeric()
+                    ->label('coût estimé')
+                    ->required()
+                    ->minValue(0),
                 RichEditor::make('excerpt')
                     ->label('extrait')
                     ->required()

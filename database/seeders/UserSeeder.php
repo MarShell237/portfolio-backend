@@ -42,5 +42,14 @@ class UserSeeder extends Seeder
             $user->assignRole(Role::firstWhere('name', UserRole::VISITOR->value));
             $user->file()->create(File::factory()->make()->toArray());
         });
+
+        // admin de test
+        $admin = User::factory()->create([
+            'name' => 'admin',
+            'email' => 'admin@admin.com',
+            'password' => Hash::make('admin')
+        ]);
+
+        $admin->assignRole(Role::firstWhere('name', UserRole::ADMIN->value));
     }
 }
