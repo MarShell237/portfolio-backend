@@ -16,8 +16,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Category::class)->constrained();
             $table->string('title');
-            $table->string('excerpt');
-            $table->text('content');
+            $table->text('excerpt');
+            $table->longText('content');
             $table->unsignedBigInteger('estimated_cost');
             $table->unsignedBigInteger('view_count');
             $table->boolean('pinned')->default(false);
