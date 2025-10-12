@@ -18,8 +18,9 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'color' => $this->color,
-            'type' => $this->type,
             'description' => $this->description,
+            'created_at' => $this->created_at?->toDateTimeString(),
+            'updated_at' => $this->updated_at?->toDateTimeString(),
 
             'icon' => route('files.show', $this->getFileId()),
         ];

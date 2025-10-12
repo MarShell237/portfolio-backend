@@ -22,11 +22,11 @@ trait HasFile
     public function getFileId(): ?int
     {
         return File::where('fileable_id', $this->id)
-            ->where('fileable_type', get_class($this))
+            ->where('fileable_type', $this->getMorphClass())
             ->value('id');
     }
 
-    public function getFileUrl(): string{
+    public function getFileUrl(): ?string{
         return $this->file ? Storage::disk($this->file->disk)->url($this->file->file_path) : null;
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Enum\UserRole;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -14,7 +14,7 @@ class UserRepository
         return $user->createToken(config('auth.token_name'), ["role:$role->value"])->plainTextToken;
     }
 
-    public function connected(): User{
+    public function connected(): ?User{
         return auth('api')->user();
     }
 

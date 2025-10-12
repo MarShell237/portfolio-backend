@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enum\UserRole;
+use App\Enums\UserRole;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -47,7 +47,7 @@ class AuthController extends Controller
             'User registered successfully. Please verify your email address.',
             [
                 'token' => $token,
-                'user' => new UserResource($user),
+                'data' => new UserResource($user),
             ]
         );
     }
@@ -65,8 +65,8 @@ class AuthController extends Controller
             return ApiResponse::ok(
                 'user connected',
                 [
-                    'token' => $this->userRepository->generateToken($user, $user->getRoleNames()->first()),
-                    'user' => new UserResource($user),
+                    'token' => $this->userRepository->generateToken($user, UserRole::VISITOR),
+                    'data' => new UserResource($user),
                 ]
             );
         } catch (Throwable $e) {
@@ -76,7 +76,7 @@ class AuthController extends Controller
 
     public function connected(){
         return ApiResponse::ok('success to get user connected', [
-            'user' => new UserResource($this->userRepository->connected())
+            'data' => new UserResource($this->userRepository->connected())
         ]);
     }
 

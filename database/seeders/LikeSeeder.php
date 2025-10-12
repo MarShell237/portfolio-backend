@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enum\UserRole;
+use App\Enums\UserRole;
 use Illuminate\Database\Seeder;
 use App\Models\Post;
 use App\Models\Project;
@@ -27,7 +27,7 @@ class LikeSeeder extends Seeder
             foreach ($randomVisitors as $visitor) {
                 Like::create([
                     'likeable_id' => $post->id,
-                    'likeable_type' => Post::class,
+                    'likeable_type' => (new Post())->getMorphClass(),
                     'liker_id' => $visitor->id,
                 ]);
             }
@@ -40,7 +40,7 @@ class LikeSeeder extends Seeder
             foreach ($randomVisitors as $visitor) {
                 Like::create([
                     'likeable_id' => $project->id,
-                    'likeable_type' => Project::class,
+                    'likeable_type' => (new Project())->getMorphClass(),
                     'liker_id' => $visitor->id,
                 ]);
             }

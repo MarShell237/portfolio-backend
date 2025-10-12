@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enum\UserRole;
+use App\Enums\UserRole;
 use App\Notifications\UserCustomResetPasswordNotification;
 use App\Notifications\UserVerifyEmail;
 use App\Traits\HasFile;
@@ -78,5 +78,20 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword,
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new UserCustomResetPasswordNotification($token));
+    }
+
+    public function shares()
+    {
+        return $this->hasMany(Share::class, 'sharer_id');
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class, 'liker_id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'commenter_id');
     }
 }

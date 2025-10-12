@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Repositories\UserRepository;
 
 class UserController extends Controller
@@ -13,6 +14,14 @@ class UserController extends Controller
 
     private static string $folderPath = 'users/photos';
 
+    public function show(User $user)
+    {
+        return ApiResponse::ok(
+            'User retrieved successfully', 
+            ['data' => new UserResource($user)]
+        );
+    }
+
     public function update (RegisterRequest $request){
         $data = $request->validated();
         $user = $this->userRepository->connected();
@@ -20,7 +29,7 @@ class UserController extends Controller
         if (isset($data['photo'])) {
             $user->setFile($data['photo'], self::$folderPath);
         }
-        return ApiResponse::ok('user updated successfully', ['user' => new UserResource($user)]);
+        return ApiResponse::ok('user updated successfully', ['data' => new UserResource($user)]);
     }
 
     public function destroy(){

@@ -18,7 +18,7 @@ class LinkFactory extends Factory
     public function definition(): array
     {
         return [
-            'linkable_type' => User::class,
+            'linkable_type' => (new User())->getMorphClass(),
             'linkable_id' => User::factory(),
             'url' => $this->faker->url(),
             'description' => $this->faker->sentence(),

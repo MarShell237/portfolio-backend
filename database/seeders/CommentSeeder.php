@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enum\UserRole;
+use App\Enums\UserRole;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Project;
@@ -28,7 +28,7 @@ class CommentSeeder extends Seeder
                 Comment::create([
                     'commenter_id' => $visitor->id,
                     'commentable_id' => $project->id,
-                    'commentable_type' => Project::class,
+                    'commentable_type' => (new Project())->getMorphClass(),
                     'content' => 'Commentaire ' . ($i + 1) . ' sur le projet ' . $project->id,
                 ]);
             }
@@ -40,7 +40,7 @@ class CommentSeeder extends Seeder
                 Comment::create([
                     'commenter_id' => $visitor->id,
                     'commentable_id' => $post->id,
-                    'commentable_type' => Post::class,
+                    'commentable_type' => (new Post())->getMorphClass(),
                     'content' => 'Commentaire ' . ($i + 1) . ' sur le post ' . $post->id,
                 ]);
             }

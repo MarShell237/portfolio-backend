@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enum\UserRole;
+use App\Enums\UserRole;
 use App\Models\Post;
 use App\Models\Project;
 use App\Models\Share;
@@ -30,7 +30,7 @@ class ShareSeeder extends Seeder
                 Share::create([
                     'sharer_id' => $visitor->id,
                     'shareable_id' => $project->id,
-                    'shareable_type' => Project::class,
+                    'shareable_type' => (new Project())->getMorphClass(),
                     'platform' => 'whatsapp',
                 ]);
             }
@@ -40,7 +40,7 @@ class ShareSeeder extends Seeder
                 Share::create([
                     'sharer_id' => $visitor->id,
                     'shareable_id' => $post->id,
-                    'shareable_type' => Post::class,
+                    'shareable_type' => (new Post())->getMorphClass(),
                     'platform' => 'whatsapp',
                 ]);
             }

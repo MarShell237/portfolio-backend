@@ -26,7 +26,7 @@ class CommentFactory extends Factory
             'content' => $this->faker->sentence(),
             'commenter_id' => $visitor->id,
             // 'commentable_id' => Project::factory(),
-            // 'commentable_type' => Project::class,
+            // 'commentable_type' => (new Project())->getMorphClass(),
         ];
     }
 }

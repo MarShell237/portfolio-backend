@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,8 +18,8 @@ class FileFactory extends Factory
     public function definition(): array
     {
         return [
-            'fileable_id' => \App\Models\User::factory(),
-            'fileable_type' => 'App\Models\User',
+            'fileable_id' => User::factory(),
+            'fileable_type' => (new User())->getMorphClass(),
             'file_name' => $this->faker->word() . '.jpg',
             'file_path' => 'uploads/' . $this->faker->word() . '.jpg',
             'file_type' => 'image/jpeg',

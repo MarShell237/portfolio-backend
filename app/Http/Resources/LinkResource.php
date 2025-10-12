@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\MorphRoute;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TagResource extends JsonResource
+class LinkResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +17,9 @@ class TagResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'color' => $this->color,
+            'linkable' => MorphRoute::make($this->linkable_type, $this->linkable_id),
+            'label' => $this->label,
+            'url' => $this->url,
             'description' => $this->description,
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),
