@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
+use App\Http\Requests\NotificationRequest;
 use App\Http\Resources\NotificationResource;
+use App\Models\User;
+use App\Notifications\ContactNotification;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -48,6 +52,27 @@ class NotificationController extends Controller
         } catch (Throwable $e) {
             return ApiResponse::anyError($e->getMessage(), $e->getCode());
         }
+    }
+
+    public function store(NotificationRequest $request){
+        $data = $request->validated();
+        $marcel = User::where('email', config('admin.email'))->firstOrFail();
+
+        $fileUrl = null;
+        if ($request->hasFile('attachment')) {
+            $path = $request->file('attachment')->store('attachments', 'public');
+            $fileUrl = Storage::url($path);
+        }
+
+        $marcel->notify(new ContactNotification(
+            object: $data['subject'],
+            message: $data['message'],
+            fileUrl: $fileUrl
+        ));
+
+        return ApiResponse::ok(
+            'Your message has been successfully sent to admin.'
+        );
     }
 
     public function markAllAsRead()
