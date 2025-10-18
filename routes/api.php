@@ -89,3 +89,11 @@ Route::prefix('v1')->name('')->group(function () {
         Route::get('unread/count', 'unreadCount')->name('notifications.unreadCount');
     });
 });
+
+Route::get('/cache-test', function () {
+    sleep(5);
+    return response()->json([
+        'now' => now()->toDateTimeString(),
+        'random' => rand(1000, 9999),
+    ]);
+});
