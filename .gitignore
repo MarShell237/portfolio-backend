@@ -26,3 +26,6 @@ Thumbs.db
 /.scribe
 /resources/views/scribe/index.blade.php
 /public/vendor/scribe/
+**/caddy
+frankenphp
+frankenphp-worker.php
