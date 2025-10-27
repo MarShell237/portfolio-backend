@@ -26,10 +26,10 @@ Route::prefix('v1')->name('')->group(function () {
     Route::middleware(['auth:sanctum', TokenRoleMiddleware::class . ':VISITOR,ADMIN'])->group(function(){
         Route::get('users/connected', [AuthController::class, 'connected'])->name('users.connected');
         Route::delete('users/logout', [AuthController::class, 'logout'])->name('users.logout');
-        
+
         Route::put('users',[UserController::class,'update'])->name('users.update');
         Route::delete('users',[UserController::class,'destroy'])->name('users.destroy');
-    
+
         // like routes
         Route::prefix('likes')->controller(LikeController::class)->group(function () {
             Route::get('/', 'index');
@@ -55,24 +55,24 @@ Route::prefix('v1')->name('')->group(function () {
     Route::post('users/reset-password', [AuthController::class, 'reset'])
         ->name('users.password.reset');
     Route::get('users/{user}',[UserController::class,'show'])->name('users.show');
-    
+
     Route::get('categories',[CategoryController::class,'index'])->name('categories.index');
     Route::get('categories/{category}',[CategoryController::class,'show'])->name('categories.show');
-    
+
     Route::get('tags',[TagController::class,'index'])->name('tags.index');
     Route::get('tags/{tag}',[TagController::class,'show'])->name('tags.show');
-    
+
     Route::get('links',[LinkController::class,'index'])->name('links.index');
     Route::get('links/{link}',[LinkController::class,'show'])->name('links.show');
-    
+
     Route::get('projects',[ProjectController::class,'index'])->name('projects.index');
     Route::get('projects/{project}',[ProjectController::class,'show'])->name('projects.show');
-    
+
     Route::get('posts',[PostController::class,'index'])->name('posts.index');
     Route::get('posts/{post}',[PostController::class,'show'])->name('posts.show');
-    
+
     Route::get('file/{file}',[FileController::class,'show'])->name('files.show');
-    
+
     // comment routes
     Route::prefix('comments')->group(function () {
         Route::get('{commentableType}/{commentableId}', [CommentController::class, 'index'])->name('comments.index');
