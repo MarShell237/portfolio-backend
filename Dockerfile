@@ -35,7 +35,7 @@ RUN mkdir -p storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 # Exposer le port 8000 pour FrankenPHP
-EXPOSE 8000
+# EXPOSE 8000
 
 # Lancer Laravel Octane avec FrankenPHP
-CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000"]
+ENTRYPOINT ["php", "artisan", "octane:frankenphp"]
