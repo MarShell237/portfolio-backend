@@ -18,6 +18,9 @@ RUN install-php-extensions \
     ftp \
     redis
 
+# Installer unzip et git pour les packages composer de laravel
+RUN apt-get update && apt-get install -y unzip git && rm -rf /var/lib/apt/lists/*
+
     # Installer Composer manuellement
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
@@ -35,7 +38,7 @@ RUN mkdir -p storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 # Exposer le port 8000 pour FrankenPHP
-# EXPOSE 8000
+EXPOSE 8000
 
 # Lancer Laravel Octane avec FrankenPHP
 ENTRYPOINT ["php", "artisan", "octane:frankenphp"]
