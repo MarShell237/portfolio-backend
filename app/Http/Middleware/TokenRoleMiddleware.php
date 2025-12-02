@@ -3,12 +3,17 @@
 namespace App\Http\Middleware;
 
 use App\Helpers\ApiResponse;
+use App\Repositories\UserRepository;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class TokenRoleMiddleware
 {
+    public function __construct(public UserRepository $userRepository)
+    {
+        //
+    }
     /**
      * Handle an incoming request.
      *
@@ -20,9 +25,12 @@ class TokenRoleMiddleware
     public function handle(Request $request, Closure $next, ...$roles)
     {
         foreach ($roles as $role) {
-            if ($request->user()->tokenCan('role:' . $role)) {
+            if ($this->userRepository->connected()->hasRole($role)) {
                 return $next($request);
             }
+            // if ($request->user()->tokenCan('role:' . $role)) {
+            //     return $next($request);
+            // }
         }
 
         return ApiResponse::unauthorized('Not Authorized, insufficient role privileges.');

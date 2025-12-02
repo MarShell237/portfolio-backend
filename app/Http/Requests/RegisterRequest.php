@@ -24,7 +24,8 @@ class RegisterRequest extends FormRequest
     {
         $rules = [
             'name'          => ['required', 'min:5'],
-            'photo'         => ['nullable', 'image', 'max:5120']
+            'photo'         => ['nullable', 'image', 'max:5120'],
+            'remember_me'         => ['nullable', 'boolean']
         ];
 
         if ($this->isMethod('post')) {

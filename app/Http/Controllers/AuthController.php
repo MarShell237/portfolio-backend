@@ -14,8 +14,8 @@ use App\Repositories\UserRepository;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -25,21 +25,43 @@ class AuthController extends Controller
 
     private static string $folderPath = 'users/photos';
 
-    public function register(RegisterRequest $request){
-        $data = $request->validated();
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+    public function registerCookie(RegisterRequest $request){
+        $user = $this->userRepository->createUser($request->validated(), $request->validated()['photo'] ?? null);
+        $rememberMe = $request->validated()['remember_me'] ?? false;
+        Auth::guard('web')->login($user, $rememberMe);
+        event(new Registered($user));
 
-        $user->assignRole(Role::firstWhere('name', UserRole::VISITOR->value));
+        return ApiResponse::created(
+            'Web user registered successfully. Please verify your email address.',
+            [
+                'data' => new UserResource($user),
+            ]
+        );
+    }
 
-        if (isset($data['photo'])) {
-            $user->setFile($data['photo'], self::$folderPath);
+    public function loginCookie(LoginRequest $request){
+        try {
+            $credentials = $request->validated();
+            $rememberMe = $request->validated()['remember_me'] ?? false;
+            if (!Auth::guard('web')->attempt($credentials, $rememberMe)) {
+                abort(Response::HTTP_UNAUTHORIZED, 'Invalid credentials.');
+            }
+
+            // request()->session()->regenerate();
+            $user = User::where('email', $credentials['email'])->first();
+            return ApiResponse::ok(
+                'Web user connected',
+                [
+                    'data' => new UserResource($user),
+                ]
+            );
+        } catch (Throwable $e) {
+            return ApiResponse::anyError($e->getMessage(), $e->getCode());
         }
+    }
 
-        $user->refresh();
+    public function registerToken(RegisterRequest $request){
+        $user = $this->userRepository->createUser($request->validated(), $request->validated()['photo'] ?? null);
         $token = $this->userRepository->generateToken($user, UserRole::VISITOR);
         event(new Registered($user));
 
@@ -52,7 +74,7 @@ class AuthController extends Controller
         );
     }
 
-    public function login(LoginRequest $request){
+    public function loginToken(LoginRequest $request){
         try {
             $credentials = $request->validated();
 
@@ -80,11 +102,25 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(){
-        $this->userRepository->connected()->tokens()->delete();
-        return ApiResponse::ok('user disconnected');
+    public function logoutCookie(){
+        $user = $this->userRepository->connected();
+
+        if ($user) {
+            Auth::guard('web')->logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+        }
+
+        return ApiResponse::ok('Web user disconnected');
     }
 
+    public function logoutToken(){
+        $user = $this->userRepository->connected();
+        if($user){
+            $user->tokens()->delete();
+        }
+        return ApiResponse::ok('user disconnected');
+    }
 
     public function verify(EmailVerificationRequest $request)
     {

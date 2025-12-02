@@ -25,31 +25,41 @@ Route::prefix('v1')->name('')->group(function () {
 
     Route::middleware(['auth:sanctum', TokenRoleMiddleware::class . ':VISITOR,ADMIN'])->group(function(){
         Route::get('users/connected', [AuthController::class, 'connected'])->name('users.connected');
-        Route::delete('users/logout', [AuthController::class, 'logout'])->name('users.logout');
+        Route::delete('users/logout-cookie', [AuthController::class, 'logoutCookie'])
+                ->middleware('web')
+                ->name('users.logout.cookie');
+        Route::delete('users/logout-token', [AuthController::class, 'logoutToken'])->name('users.logout.token');
 
         Route::put('users',[UserController::class,'update'])->name('users.update');
         Route::delete('users',[UserController::class,'destroy'])->name('users.destroy');
 
-        // like routes
-        Route::prefix('likes')->controller(LikeController::class)->group(function () {
+        Route::middleware('verified')->group(function(){
+            // like routes
+            Route::prefix('likes')->controller(LikeController::class)->group(function () {
             Route::get('/', 'index');
             Route::post('{likeableType}/{likeableId}', 'likeOrUnlike');
-        });
+            });
 
-        // share routes
-        Route::prefix('shares')->controller(ShareController::class)->group(function () {
-            Route::post('{shareableType}/{shareableId}/{platform}', 'share');
-        });
+            // share routes
+            Route::prefix('shares')->controller(ShareController::class)->group(function () {
+                Route::post('{shareableType}/{shareableId}/{platform}', 'share');
+            });
 
-        Route::prefix('comments')->group(function () {
-            Route::post('{commentableType}/{commentableId}', [CommentController::class, 'store']);
-            Route::put('{comment}', [CommentController::class, 'update']);
-            Route::delete('{comment}', [CommentController::class, 'destroy']);
+            Route::prefix('comments')->group(function () {
+                Route::post('{commentableType}/{commentableId}', [CommentController::class, 'store']);
+                Route::put('{comment}', [CommentController::class, 'update']);
+                Route::delete('{comment}', [CommentController::class, 'destroy']);
+            });
         });
     });
 
-    Route::post('users/register', [AuthController::class, 'register'])->name('users.register');
-    Route::post('users/login', [AuthController::class, 'login'])->name('users.login');
+    Route::middleware('web')->group(function(){
+        Route::post('users/register-cookie', [AuthController::class, 'registerCookie'])->name('users.register.cookie');
+        Route::post('users/login-cookie', [AuthController::class, 'loginCookie'])->name('users.login.cookie');
+    });
+
+    Route::post('users/register-token', [AuthController::class, 'registerToken'])->name('users.register.token');
+    Route::post('users/login-token', [AuthController::class, 'loginToken'])->name('users.login.token');
     Route::post('users/forgot-password', [AuthController::class, 'sendResetLinkEmail'])
         ->name('users.password.request');
     Route::post('users/reset-password', [AuthController::class, 'reset'])
@@ -58,7 +68,7 @@ Route::prefix('v1')->name('')->group(function () {
 
     Route::get('categories',[CategoryController::class,'index'])->name('categories.index');
     Route::get('categories/{category}',[CategoryController::class,'show'])->name('categories.show');
-
+    
     Route::get('tags',[TagController::class,'index'])->name('tags.index');
     Route::get('tags/{tag}',[TagController::class,'show'])->name('tags.show');
 
@@ -79,7 +89,7 @@ Route::prefix('v1')->name('')->group(function () {
         Route::get('{comment}', [CommentController::class, 'show'])->name('comments.show');
     });
 
-        Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
+    Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
         Route::get('/', 'index')->name('notifications.index');
         Route::get('{notification_id}', 'show')->name('notifications.show');
         Route::patch('{notification_id}/read', 'markAsRead')->name('notifications.markAsRead');
