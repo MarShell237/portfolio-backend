@@ -23,8 +23,6 @@ class AuthController extends Controller
 {
     public function __construct(private UserRepository $userRepository) {}
 
-    private static string $folderPath = 'users/photos';
-
     public function registerCookie(RegisterRequest $request){
         $user = $this->userRepository->createUser($request->validated(), $request->validated()['photo'] ?? null);
         $rememberMe = $request->validated()['remember_me'] ?? false;
@@ -43,11 +41,12 @@ class AuthController extends Controller
         try {
             $credentials = $request->validated();
             $rememberMe = $request->validated()['remember_me'] ?? false;
+            unset($credentials['remember_me']);
             if (!Auth::guard('web')->attempt($credentials, $rememberMe)) {
                 abort(Response::HTTP_UNAUTHORIZED, 'Invalid credentials.');
             }
 
-            // request()->session()->regenerate();
+            request()->session()->regenerate();
             $user = User::where('email', $credentials['email'])->first();
             return ApiResponse::ok(
                 'Web user connected',
@@ -97,6 +96,7 @@ class AuthController extends Controller
     }
 
     public function connected(){
+        $user = $this->userRepository->connected();
         return ApiResponse::ok('success to get user connected', [
             'data' => new UserResource($this->userRepository->connected())
         ]);
