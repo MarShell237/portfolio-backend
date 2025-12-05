@@ -4,14 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Repositories\UserRepository;
 
 class RegisterRequest extends FormRequest
 {
-    public function __construct(public UserRepository $userRepository)
-    {
-        //
-    }
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -39,7 +34,7 @@ class RegisterRequest extends FormRequest
         }
 
         if ($this->isMethod('put') || $this->isMethod('patch')) {
-            $userId = $this->userRepository->connected()->id;
+            $userId = auth('web')->user()?->id ?? auth('api')->user()?->id;
 
             $rules['email'] = [
                 'sometimes',
