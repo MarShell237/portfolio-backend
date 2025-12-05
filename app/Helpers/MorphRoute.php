@@ -13,7 +13,6 @@ class MorphRoute
             'project' => route('projects.show', $id),
             'post' => route('posts.show', $id),
             'comment' => route('comments.show', $id),
-            'category' => route('categories.show', $id),
             'tag' => route('tags.show', $id),
             'user' => route('users.show', $id),
 

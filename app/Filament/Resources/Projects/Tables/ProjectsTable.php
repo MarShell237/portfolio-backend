@@ -37,9 +37,6 @@ class ProjectsTable
                     ->label('vues')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('category.name')
-                    ->label('Catégorie')
-                    ->sortable(),
                 TextColumn::make('tags.name')
                     ->label('Tags')
                     ->sortable()

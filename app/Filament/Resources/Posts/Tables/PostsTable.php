@@ -42,9 +42,6 @@ class PostsTable
                 TextColumn::make('published_at')
                     ->dateTime('l d F Y à H:i:s')
                     ->sortable(),
-                TextColumn::make('category.name')
-                    ->label('Catégorie')
-                    ->sortable(),
                 TextColumn::make('tags.name')
                     ->label('Tags')
                     ->sortable()
@@ -69,7 +66,7 @@ class PostsTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-                
+
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

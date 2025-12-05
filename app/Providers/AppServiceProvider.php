@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Project;
-use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Comment;
 use App\Models\Link;
@@ -37,7 +36,6 @@ class AppServiceProvider extends ServiceProvider
             'post' => Post::class,
             'project' => Project::class,
             'comment' => Comment::class,
-            'category' => Category::class,
             'tag' => Tag::class,
             'link' => Link::class,
         ]);

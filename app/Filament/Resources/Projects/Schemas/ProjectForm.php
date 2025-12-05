@@ -16,7 +16,7 @@ class ProjectForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
-            ->components([                
+            ->components([
                 ImageEntry::make('file.file_path')
                     ->getStateUsing(fn ($record) => $record->getFileUrl())
                     ->visible(fn ($record) => filled($record) && $record->file !== null)
@@ -33,19 +33,12 @@ class ProjectForm
                 TextInput::make('title')
                     ->label('Titre')
                     ->required(),
-                Select::make('category_id')
-                    ->label('Catégorie')
-                    ->relationship('category', 'name') 
-                    ->searchable()                     
-                    ->preload()                        
-                    ->required()
-                    ->native(false),
                 Select::make('tags')
                     ->label('Tags')
                     ->multiple()
                     ->relationship('tags', 'name')
-                    ->preload()                     
-                    ->searchable()                 
+                    ->preload()
+                    ->searchable()
                     ->required(),
                 Toggle::make('pinned')
                     ->label('Épinglé')

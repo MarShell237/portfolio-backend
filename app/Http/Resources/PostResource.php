@@ -31,7 +31,6 @@ class PostResource extends JsonResource
             'comments_count'        => $this->whenCounted('comments'),
             'shares_count'          => $this->whenCounted('shares'),
 
-            'category' => route('categories.show', $this->category_id),
             'cover_image' => route('files.show', $this->getFileId()),
             'comments' => route('comments.index', [
                 'commentableType' => $this->getMorphClass(),

@@ -15,7 +15,7 @@ class ProjectInfolist
         return $schema
             ->components([
                 ImageEntry::make('file.file_path')
-                    ->getStateUsing(fn ($record) =>$record->getFileUrl())   
+                    ->getStateUsing(fn ($record) =>$record->getFileUrl())
                     ->label('image de existante')
                     ->circular(),
                 TextEntry::make('title')
@@ -29,8 +29,6 @@ class ProjectInfolist
                 IconEntry::make('pinned')
                     ->label('Épinglé')
                     ->boolean(),
-                TextEntry::make('category.name')
-                    ->label('Catégorie'),
                 TextEntry::make('tags.name')
                     ->label('Tags')
                     ->badge(),

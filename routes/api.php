@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\LikeController;
@@ -66,9 +65,6 @@ Route::prefix('v1')->name('')->group(function () {
         ->name('users.password.reset');
     Route::get('users/{user}',[UserController::class,'show'])->name('users.show');
 
-    Route::get('categories',[CategoryController::class,'index'])->name('categories.index');
-    Route::get('categories/{category}',[CategoryController::class,'show'])->name('categories.show');
-    
     Route::get('tags',[TagController::class,'index'])->name('tags.index');
     Route::get('tags/{tag}',[TagController::class,'show'])->name('tags.show');
 
