@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ContactNotification extends Notification
+class ContactNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -15,9 +15,12 @@ class ContactNotification extends Notification
      * Create a new notification instance.
      */
     public function __construct(
+        public string $name,
+        public string $email,
         public string $object,
         public string $message,
-        public ?string $fileUrl = null
+        public ?string $fileUrl = null,
+        public ?string $filePath = null,
     )
     {
         //
@@ -30,7 +33,7 @@ class ContactNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
     }
 
     /**
@@ -38,10 +41,20 @@ class ContactNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+        $mail = (new MailMessage)
+            ->subject('Nouveau message : ' . $this->object)
+            ->greeting('Bonjour,')
+            ->line('Vous avez reçu un message de : ' . $this->name)
+            ->line('Email : ' . $this->email)
+            ->line('Objet : ' . $this->object)
+            ->line('Message :')
+            ->line($this->message);
+
+        if ($this->filePath) {
+            $mail->attach(storage_path('app/public/' . $this->filePath));
+        }
+
+        return $mail;
     }
 
     /**
@@ -52,6 +65,8 @@ class ContactNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'name' => $this->name,
+            'email' => $this->email,
             'object' => $this->object,
             'message' => $this->message,
             'file' => $this->fileUrl,

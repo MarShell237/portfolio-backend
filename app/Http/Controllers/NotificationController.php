@@ -35,7 +35,7 @@ class NotificationController extends Controller
         );
     }
 
-    
+
     public function show($notification_id)
     {
         try{
@@ -56,18 +56,23 @@ class NotificationController extends Controller
 
     public function store(NotificationRequest $request){
         $data = $request->validated();
-        $marcel = User::where('email', config('admin.email'))->firstOrFail();
-
+        $admin = User::where('email', config('admin.email'))->firstOrFail();
+        $user = $this->userRepository->connected();
         $fileUrl = null;
+        $path= null;
         if ($request->hasFile('attachment')) {
-            $path = $request->file('attachment')->store('attachments', 'public');
-            $fileUrl = Storage::url($path);
+            $filename = uniqid() . '__' . $request->file('attachment')->getClientOriginalName() ;
+            $path = $request->file('attachment')->storeAs('attachments', $filename, 'public');
+            $fileUrl = Storage::disk('public')->url($path);
         }
 
-        $marcel->notify(new ContactNotification(
-            object: $data['subject'],
+        $admin->notify(new ContactNotification(
+            name: $user->name,
+            email: $user->email,
+            object: $data['object'],
             message: $data['message'],
-            fileUrl: $fileUrl
+            fileUrl: $fileUrl,
+            filePath: $path
         ));
 
         return ApiResponse::ok(
@@ -125,7 +130,7 @@ class NotificationController extends Controller
     public function clearRead()
     {
         $this->userRepository->connected()->readNotifications()->delete();
-        
+
         return ApiResponse::ok(
             "success to clear read notifications",
         );

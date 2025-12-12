@@ -22,9 +22,9 @@ class NotificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'subject' => ['required', 'string', 'max:500'],
-            'message' => ['required', 'string', 'max:5000'],
-            'attachment' => ['nullable', 'file', 'max:20480', 'mimes:jpg,jpeg,png,pdf,doc,docx,zip'],
+            'object' => ['required', 'string', 'max:500'],
+            'message' => ['required', 'string', 'max:10000'],
+            'attachment' => ['nullable', 'file', 'max:20480'],
         ];
     }
 }

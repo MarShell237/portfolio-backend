@@ -49,6 +49,17 @@ Route::prefix('v1')->name('')->group(function () {
                 Route::put('{comment}', [CommentController::class, 'update']);
                 Route::delete('{comment}', [CommentController::class, 'destroy']);
             });
+
+            Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
+                // Route::get('/', 'index')->name('notifications.index');
+                // Route::get('{notification_id}', 'show')->name('notifications.show');
+                Route::post('/', 'store')->name('notifications.store');
+                // Route::patch('{notification_id}/read', 'markAsRead')->name('notifications.markAsRead');
+                // Route::patch('read/all', 'markAllAsRead')->name('notifications.markAllAsRead');
+                // Route::delete('{notification_id}', 'destroy')->name('notifications.destroy');
+                // Route::delete('read/clear', 'clearRead')->name('notifications.clearRead');
+                // Route::get('unread/count', 'unreadCount')->name('notifications.unreadCount');
+            });
         });
     });
 
@@ -83,16 +94,6 @@ Route::prefix('v1')->name('')->group(function () {
     Route::prefix('comments')->group(function () {
         Route::get('{commentableType}/{commentableId}', [CommentController::class, 'index'])->name('comments.index');
         Route::get('{comment}', [CommentController::class, 'show'])->name('comments.show');
-    });
-
-    Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
-        Route::get('/', 'index')->name('notifications.index');
-        Route::get('{notification_id}', 'show')->name('notifications.show');
-        Route::patch('{notification_id}/read', 'markAsRead')->name('notifications.markAsRead');
-        Route::patch('read/all', 'markAllAsRead')->name('notifications.markAllAsRead');
-        Route::delete('{notification_id}', 'destroy')->name('notifications.destroy');
-        Route::delete('read/clear', 'clearRead')->name('notifications.clearRead');
-        Route::get('unread/count', 'unreadCount')->name('notifications.unreadCount');
     });
 });
 
